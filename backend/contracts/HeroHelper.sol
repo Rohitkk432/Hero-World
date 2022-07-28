@@ -13,7 +13,7 @@ contract HeroHelper is HeroFactory {
 
     ///@notice withdraws the balance of the contract.
     function withdraw() external onlyOwner {
-        owner.transfer(this.balance);
+        payable(msg.sender).transfer(address(this).balance);
     }
 
     ///@notice sets fees.
@@ -41,7 +41,7 @@ contract HeroHelper is HeroFactory {
     function getHeroesByOwner(address _owner)
         external
         view
-        returns (uint256[])
+        returns (uint256[] memory)
     {
         uint256[] memory result = new uint256[](ownerHeroCount[_owner]);
         uint256 counter = 0;
@@ -55,7 +55,11 @@ contract HeroHelper is HeroFactory {
     }
 
     ///@notice gets all cards by a owner.
-    function getCardsByOwner(address _owner) external view returns (uint256[]) {
+    function getCardsByOwner(address _owner)
+        external
+        view
+        returns (uint256[] memory)
+    {
         uint256[] memory result = new uint256[](ownerSummonCardCount[_owner]);
         uint256 counter = 0;
         for (uint256 i = 0; i < summonCards.length; i++) {

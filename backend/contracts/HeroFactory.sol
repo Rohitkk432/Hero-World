@@ -26,7 +26,7 @@ contract HeroFactory is Ownable {
         uint32 level;
         uint32 readyTime;
         uint16 winCount;
-        uint16 loseCount;
+        uint16 lossCount;
     }
     struct SummonCard {
         uint8 species;
@@ -44,20 +44,25 @@ contract HeroFactory is Ownable {
     mapping(address => uint256) ownerSummonCardCount;
 
     /// @notice checks if only hero/card owner calls the function.
-    modifier onlyOwnerOfHero (uint _heroId) {
+    modifier onlyOwnerOfHero(uint256 _heroId) {
         require(msg.sender == heroToOwner[_heroId]);
         _;
     }
 
-    modifier onlyOwnerOfCard (uint _cardId) {
+    modifier onlyOwnerOfCard(uint256 _cardId) {
         require(msg.sender == summonCardToOwner[_cardId]);
         _;
     }
 
     ///@notice generates psudo-random number.
-    function _generateRandomNumber() private view returns (uint256) {
+    function _generateRandomNumber() private returns (uint256) {
         randNonce++;
-        return uint256(keccak256(now, msg.sender, randNonce)) % modulus;
+        return
+            uint256(
+                keccak256(
+                    abi.encodePacked(block.timestamp, msg.sender, randNonce)
+                )
+            ) % modulus;
     }
 
     ///@notice creates hero with given dna, species, rarity.
@@ -66,9 +71,18 @@ contract HeroFactory is Ownable {
         uint8 _species,
         uint8 _rarity
     ) internal {
-        uint256 id = heroes.push(
-            Hero(_dna, _species, _rarity, 1, uint32(now + cooldownTime), 0, 0)
-        ) - 1;
+        heroes.push(
+            Hero(
+                _dna,
+                _species,
+                _rarity,
+                1,
+                uint32(block.timestamp + cooldownTime),
+                0,
+                0
+            )
+        );
+        uint256 id = heroes.length - 1;
         heroToOwner[id] = msg.sender;
         ownerHeroCount[msg.sender]++;
         emit HeroCreated(id, _dna, _species, _rarity);
@@ -76,16 +90,22 @@ contract HeroFactory is Ownable {
 
     ///@notice creates summon card with given species, rarity.
     function _createSummonCard(uint8 _species, uint8 _rarity) internal {
-        uint256 id = summonCards.push(
-            Hero(_species, _rarity, uint32(now + summoningTime), false)
-        ) - 1;
+        summonCards.push(
+            SummonCard(
+                _species,
+                _rarity,
+                uint32(block.timestamp + summoningTime),
+                false
+            )
+        );
+        uint256 id = summonCards.length - 1;
         summonCardToOwner[id] = msg.sender;
         ownerSummonCardCount[msg.sender]++;
         emit SummonCardCreated(id, _species, _rarity);
     }
 
     ///@notice creates the first hero of a player.
-    function generateRandomZombie() public {
+    function generateRandomHero() public {
         require(ownerHeroCount[msg.sender] == 0);
         uint256 randDna = _generateRandomNumber();
         uint8 randSpecies = uint8(randDna % 100);
@@ -98,14 +118,17 @@ contract HeroFactory is Ownable {
     ///@notice creates random summon card.
     function _generateRandomSummonCard() internal {
         uint256 randDna = _generateRandomNumber();
-        uint8 randSpecies = uint8(_generateRandomNumber() % 100);
-        uint8 randRarity = uint8(_generateRandomNumber() % 100);
+        uint8 randSpecies = uint8(randDna % 100);
+        uint8 randRarity = uint8(randDna % 100);
         _createSummonCard(randSpecies, randRarity);
     }
 
     ///@notice uses the summon card to create a hero.
     function useSummoningCard(uint256 _id) public onlyOwnerOfCard(_id) {
-        require(summonCards[_id].used == false && summonCards.ReadyTime <= now);
+        require(
+            summonCards[_id].used == false &&
+                summonCards[_id].readyTime <= block.timestamp
+        );
         summonCards[_id].used = true;
         uint256 randDna = _generateRandomNumber();
         randDna /= 10000;
