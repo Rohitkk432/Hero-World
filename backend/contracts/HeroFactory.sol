@@ -27,6 +27,7 @@ contract HeroFactory is Ownable {
         uint32 readyTime;
         uint16 winCount;
         uint16 lossCount;
+        string summonType;
     }
     struct SummonCard {
         uint8 species;
@@ -69,7 +70,8 @@ contract HeroFactory is Ownable {
     function _createHero(
         uint256 _dna,
         uint8 _species,
-        uint8 _rarity
+        uint8 _rarity,
+        string memory _summonType
     ) internal {
         heroes.push(
             Hero(
@@ -79,7 +81,8 @@ contract HeroFactory is Ownable {
                 1,
                 uint32(block.timestamp + cooldownTime),
                 0,
-                0
+                0,
+                _summonType
             )
         );
         uint256 id = heroes.length - 1;
@@ -112,7 +115,8 @@ contract HeroFactory is Ownable {
         randDna /= 100;
         uint8 randRarity = uint8(randDna % 100);
         randDna /= 100;
-        _createHero(randDna, randSpecies, randRarity);
+        string memory summonType = "Essence of God";
+        _createHero(randDna, randSpecies, randRarity, summonType);
     }
 
     ///@notice creates random summon card.
@@ -132,6 +136,12 @@ contract HeroFactory is Ownable {
         summonCards[_id].used = true;
         uint256 randDna = _generateRandomNumber();
         randDna /= 10000;
-        _createHero(randDna, summonCards[_id].species, summonCards[_id].rarity);
+        string memory summonType = "Summon Card";
+        _createHero(
+            randDna,
+            summonCards[_id].species,
+            summonCards[_id].rarity,
+            summonType
+        );
     }
 }
