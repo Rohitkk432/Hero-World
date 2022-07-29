@@ -10,6 +10,10 @@ import Nav from "./components/nav";
 import Landing from "./pages/landing";
 import Heroes from "./pages/heroes";
 import HeroDetails from "./pages/heroDetails";
+import Arena from "./pages/arena";
+import FightResult from "./pages/fightResult";
+import MyHeroes from "./pages/myHeroes";
+import NewHero from "./pages/newHero";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -18,9 +22,11 @@ export const App = () => (
       <Routes>
         <Route path="/" element={<Landing/>} />
         <Route path="/heroes" element={<Heroes/>} />
-        <Route path="/arena" element={<Heroes/>} />
-        <Route path="/profile" element={<Landing/>} />
+        <Route path="/arena" element={<Arena/>} />
+        <Route path="/my/heroes" element={<MyHeroes/>} />
         <Route path="/hero/:id" element={<HeroDetails/>} />
+        <Route path="/fight/result" element={<FightResult/>} />
+        <Route path="/new/hero" element={<NewHero/>} />
       </Routes>
     </Router>
   </ChakraProvider>

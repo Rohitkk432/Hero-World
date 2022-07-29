@@ -24,8 +24,8 @@ const Nav: React.FC<navProps> = () => {
                 <Link to="/arena">
                     <Box mx={3} >Arena</Box>
                 </Link>
-                <Link to="/profile">
-                    <Box mx={3} >My Lair</Box>
+                <Link to="/my/heroes">
+                    <Box mx={3} >My Heroes</Box>
                 </Link>
                 <Button ml={5} size='sm' onClick={toggleColorMode}>
                     {useColorModeValue(<SunIcon w={5} h={5} />,<MoonIcon w={5} h={5} />)}
