@@ -1,8 +1,8 @@
 import React from 'react'
 import {useEffect,useState} from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { Button,Box,Text , useColorModeValue} from '@chakra-ui/react'
-
 import {ArrowRightIcon} from '@chakra-ui/icons'
 
 import {getHeroInfo,getHeroOwner} from '../contracts/functions'
@@ -15,10 +15,12 @@ interface heroDetailsProps {
 }
 
 const HeroDetails: React.FC<heroDetailsProps> = () => {
+    const navigate = useNavigate()
+
     const [heroInfo, setHeroInfo] = useState<any>({})
     const [heroOwner, setHeroOwner] = useState("")
     useEffect(()=>{
-        const id = parseInt(window.location.pathname.slice(6,window.location.pathname.length))
+        const id =  parseInt(window.location.pathname.split('/')[2])
         getHeroInfo(id).then(res=>{
             setHeroInfo(heroParser(res,heroData));
         }).catch(err=>{
@@ -31,7 +33,7 @@ const HeroDetails: React.FC<heroDetailsProps> = () => {
         })
     },[])
 
-    
+    const textColor = useColorModeValue("black","white");
 
     return (
         <>  
@@ -69,8 +71,11 @@ const HeroDetails: React.FC<heroDetailsProps> = () => {
                         <Text mb={3} fontSize="2xl">{(heroOwner.toLowerCase()===sessionStorage.getItem("currentAccount"))?"You":heroOwner.toLowerCase()}</Text>
                     </Box>
                 </Box>
-                <Button size="lg" mt={5} color={useColorModeValue("black","white")} fontWeight="bold" fontSize="xl"  >Fight in Arena &nbsp; <ArrowRightIcon/></Button>
-
+                {(heroOwner.toLowerCase()===sessionStorage.getItem("currentAccount") && heroInfo.readyTime==="Ready")?
+                    (   
+                        <Button size="lg" mt={5} color={textColor} fontWeight="bold" fontSize="xl" onClick={()=>navigate(`/arena/${heroInfo.id}/null`)}  >Fight in Arena &nbsp; <ArrowRightIcon/></Button>
+                    ):null
+                }
             </Box>
         </>
     );

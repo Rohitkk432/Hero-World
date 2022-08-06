@@ -19,13 +19,17 @@ contract HeroFactory is Ownable {
     event SummonCardCreated(uint256 cardId, uint8 species, uint8 rarity);
 
     uint256 modulus = 10**14;
-    uint256 cooldownTime = 1 days;
-    uint256 summoningTime = 2 days;
+    // uint256 cooldownTime = 1 days;
+    // uint256 summoningTime = 2 days;
+
+    uint256 cooldownTime = 1 minutes;
+    uint256 summoningTime = 2 minutes;
 
     uint256 randNonce = 0;
 
     /// @notice Structure for Heroes, SummonCards.
     struct Hero {
+        uint256 heroId;
         uint256 dna;
         uint8 species;
         uint8 rarity;
@@ -36,6 +40,7 @@ contract HeroFactory is Ownable {
         string summonType;
     }
     struct SummonCard {
+        uint256 summonCardId;
         uint8 species;
         uint8 rarity;
         uint32 readyTime;
@@ -79,8 +84,10 @@ contract HeroFactory is Ownable {
         uint8 _rarity,
         string memory _summonType
     ) internal {
+        uint256 _heroId = heroes.length;
         heroes.push(
             Hero(
+                _heroId,
                 _dna,
                 _species,
                 _rarity,
@@ -99,8 +106,10 @@ contract HeroFactory is Ownable {
 
     ///@notice creates summon card with given species, rarity.
     function _createSummonCard(uint8 _species, uint8 _rarity) internal {
+        uint256 _summonCardId = summonCards.length;
         summonCards.push(
             SummonCard(
+                _summonCardId,
                 _species,
                 _rarity,
                 uint32(block.timestamp + summoningTime),
@@ -150,5 +159,6 @@ contract HeroFactory is Ownable {
             summonCards[_id].rarity,
             summonType
         );
+        ownerSummonCardCount[msg.sender]--;
     }
 }

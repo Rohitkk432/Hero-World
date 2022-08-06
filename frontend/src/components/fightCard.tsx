@@ -1,34 +1,110 @@
 import React from 'react'
-import { Button, Box, Text,useColorModeValue} from '@chakra-ui/react'
+import { Button, Box, Text} from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
 
-interface fightCardProps {
+import heroData from '../utils/heroData.json'
 
+import {heroParser} from '../utils/helper'
+
+
+interface heroObject {
+    heroId: number,
+    species: number,
+    rarity: number,
+    winCount: number,
+    lossCount: number,
+    readyTime: number,
+    dna: any,
+    summonType: string,
+    level: number
 }
 
-const FightCard: React.FC<fightCardProps> = () => {
+interface fightCardProps {
+    hero?: heroObject
+    mine?: boolean
+    enemy?: boolean
+    choosen?: boolean
+    rerender?: boolean
+    setRerender?: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const FightCard: React.FC<fightCardProps> = ({hero,mine,enemy,choosen,rerender,setRerender}) => {
+    const navigate = useNavigate();
+
+    let heroAdj="Tough", heroName="Aleksander", heroSpecies="Dark-Elf", heroRarity="Emperor-like",heroReadyTime="" ;
+    let id:number|undefined;
+    let heroLevel = 52 , heroWins = 5, heroLosses = 12;
+
+    if( hero ){
+        const result = heroParser(hero,heroData);
+        id = result.id;
+        heroAdj = result.adjective;
+        heroName = result.name;
+        heroSpecies = result.species;
+        heroRarity = result.rarity;
+        heroLevel = result.level;
+        heroWins = result.winCount;
+        heroLosses = result.lossCount;
+        heroReadyTime = result.readyTime;
+    }
+
+    const brokenLink = window.location.pathname.split('/');
+    if(mine!==undefined && mine){
+        brokenLink[2]=id!==undefined?String(id):"null";
+    }
+    if(enemy!==undefined && enemy){
+        brokenLink[3]=id!==undefined?String(id):"null";
+    }
+    let link =brokenLink.join('/');
+
+    const chooseGoTo = () => {
+        if(setRerender!==undefined){
+            setRerender(!rerender);
+        }
+        navigate(link);
+    }
+
     return (
         <>
             <Box w={300} h={40} m={4} px={8} py={5} color="white" bg="gray.700" rounded='lg' boxShadow="2xl" display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start" position="relative" >
                 <Text fontSize="2xl" lineHeight={1.2} mb={2} fontWeight="hairline">
-                    Adjective Name
+                    {heroAdj} {heroName}
                 </Text>
                 <Text>
-                    Species , Rarity
+                    {heroSpecies} , {heroRarity}
                 </Text>
                 <Text>
-                    Win Count : 5
+                    Win Count : {heroWins}
                 </Text>
                 <Text>
-                    Loss Count : 10
+                    Loss Count : {heroLosses}
                 </Text>
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" position="absolute" right={5} top={3} >
                     <Text fontSize="sm" fontWeight="bold">LEVEL</Text>
-                    <Text fontSize="4xl" lineHeight={1} fontWeight="bold">5</Text>
+                    <Text fontSize="4xl" lineHeight={1} fontWeight="bold">{heroLevel}</Text>
                 </Box>
                 <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center" position="absolute" right={5} bottom={3} >
-                    <Button color={useColorModeValue("black","white")} size="md">
-                        Choose
-                    </Button>
+                    {   
+                        (heroReadyTime === "Ready" && mine!==undefined && mine) ? (
+                            <Button bg={"green"} _hover={{bg: "green.800"}}  size="md"
+                            onClick={chooseGoTo}>
+                                Choose
+                            </Button>
+                        ):(enemy!==undefined && enemy)?(
+                            <Button bg={"blue.500"} _hover={{bg: "blue.600"}}  size="md"
+                            onClick={chooseGoTo}>
+                                Choose
+                            </Button>
+                        ):(choosen!==undefined && choosen)?(
+                            <Button bg={"gray.500"} _hover={{bg: "gray.600"}}  size="md">
+                                Choose
+                            </Button>
+                        ):(
+                            <Button bg={"red.500"} _hover={{bg: "red.600"}}  size="md">
+                                Choose
+                            </Button>
+                        )
+                    }
                 </Box>
             </Box>
         </>

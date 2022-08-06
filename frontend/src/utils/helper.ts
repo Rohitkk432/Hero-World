@@ -1,7 +1,7 @@
 
 
 export const heroParser = (res:any,heroData:any) => {
-    let hero={adjective:"",name:"",species:"",rarity:"",level:0,winCount:0,lossCount:0,readyTime:"",summonType:""};
+    let hero={id:0,adjective:"",name:"",species:"",rarity:"",level:0,winCount:0,lossCount:0,readyTime:"",summonType:""};
     let heroDna = Number(res.dna);
     const heroAdjNum = heroDna%1000;
     heroDna = Math.floor(heroDna/1000);
@@ -13,25 +13,25 @@ export const heroParser = (res:any,heroData:any) => {
 
     //time
     let msTime = (new Date(res.readyTime*1000).getTime() - new Date().getTime()) ;
-    let cooldownTIme = "";
+    let cooldownTime = "";
     if(msTime>0){
         if(msTime>=1000*60*60){
             const hrsTime = Math.floor(msTime/3600000);
             msTime = msTime%3600000;
             const minsTime = Math.floor(msTime/60000);
-            cooldownTIme = `${hrsTime} hrs ${minsTime} mins`;
+            cooldownTime = `${hrsTime} hrs ${minsTime} mins`;
         }else if(msTime>=1000*60 && msTime<1000*60*60){
             const minsTime = Math.floor(msTime/60000);
-            cooldownTIme = `${minsTime} mins`;
+            cooldownTime = `${minsTime} mins`;
         }else{
-            cooldownTIme = `1 mins`;
+            cooldownTime = `1 mins`;
         }
     }else{
-        cooldownTIme = `Ready`;
+        cooldownTime = `Ready`;
     }
     
 
-
+    hero.id = res.heroId;
     hero.adjective = heroAdj;
     hero.name = heroName;
     hero.species = heroSpecies;
@@ -39,7 +39,39 @@ export const heroParser = (res:any,heroData:any) => {
     hero.level = res.level;
     hero.winCount = res.winCount;
     hero.lossCount = res.lossCount;
-    hero.readyTime = cooldownTIme;
+    hero.readyTime = cooldownTime;
     hero.summonType = res.summonType;
     return hero
+}
+
+export const cardParser = (res:any,heroData:any) => {
+    let card={id:0,species:"",rarity:"",readyTime:""};
+    const cardSpecies = heroData.species[res.species % (heroData.species.length - 1)];
+    const cardRarity = heroData.rarity[res.rarity % (heroData.rarity.length - 1)];
+
+    //time
+    let msTime = (new Date(res.readyTime*1000).getTime() - new Date().getTime()) ;
+    let cooldownTime = "";
+    if(msTime>0){
+        if(msTime>=1000*60*60){
+            const hrsTime = Math.floor(msTime/3600000);
+            msTime = msTime%3600000;
+            const minsTime = Math.floor(msTime/60000);
+            cooldownTime = `${hrsTime} hrs ${minsTime} mins`;
+        }else if(msTime>=1000*60 && msTime<1000*60*60){
+            const minsTime = Math.floor(msTime/60000);
+            cooldownTime = `${minsTime} mins`;
+        }else{
+            cooldownTime = `1 mins`;
+        }
+    }else{
+        cooldownTime = `Ready`;
+    }
+    
+
+    card.id = res.summonCardId;
+    card.species = cardSpecies;
+    card.rarity = cardRarity;
+    card.readyTime = cooldownTime;
+    return card
 }

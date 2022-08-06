@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom';
 import heroData from '../utils/heroData.json'
 
 interface heroObject {
+    heroId: number,
     species: number,
     rarity: number,
     winCount: number,
@@ -19,14 +20,15 @@ interface heroObject {
 
 interface heroCardProps {
     hero?: heroObject
-    id?: number
 }
 
-const HeroCard: React.FC<heroCardProps> = ({hero,id}) => {
+const HeroCard: React.FC<heroCardProps> = ({hero}) => {
 
     let heroAdj="Tough", heroName="Aleksander", heroSpecies="Dark-Elf", heroRarity="Emperor-like" ;
+    let id:number|undefined;
     let heroLevel = 52;
-    if( hero && id!==undefined ){
+    if( hero ){
+        id = hero.heroId;
         let heroDna = Number(hero.dna);
         const heroAdjNum = heroDna%1000;
         heroDna = Math.floor(heroDna/1000);

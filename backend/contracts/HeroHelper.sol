@@ -65,6 +65,25 @@ contract HeroHelper is HeroFactory {
         return result;
     }
 
+    ///@notice gets others heroes all.
+    function getHeroesByOthers(address _owner)
+        external
+        view
+        returns (Hero[] memory)
+    {
+        Hero[] memory result = new Hero[](
+            heroes.length - ownerHeroCount[_owner]
+        );
+        uint256 counter = 0;
+        for (uint256 i = 0; i < heroes.length; i++) {
+            if (heroToOwner[i] != _owner) {
+                result[counter] = heroes[i];
+                counter++;
+            }
+        }
+        return result;
+    }
+
     ///@notice gets all cards by a owner.
     function getCardsByOwner(address _owner)
         external
@@ -76,7 +95,7 @@ contract HeroHelper is HeroFactory {
         );
         uint256 counter = 0;
         for (uint256 i = 0; i < summonCards.length; i++) {
-            if (summonCardToOwner[i] == _owner) {
+            if (summonCardToOwner[i] == _owner && !summonCards[i].used) {
                 result[counter] = summonCards[i];
                 counter++;
             }

@@ -22,6 +22,7 @@ import Arena from "./pages/arena";
 import FightResult from "./pages/fightResult";
 import MyHeroes from "./pages/myHeroes";
 import NewHero from "./pages/newHero";
+import MySummonCards from './pages/mySummonCards';
 
 interface appProps {
 
@@ -32,13 +33,13 @@ declare let window:any
 export const App:React.FC<appProps> = () => {
 
   const [metamaskConnection,setMetamaskConnection] = useState(false)
-  const [balance, setBalance] = useState<string | undefined>()
   const [currentAccount, setCurrentAccount] = useState<string | undefined>()
-  const [chainId, setChainId] = useState<number | undefined>()
-  const [chainname, setChainName] = useState<string | undefined>()
 
   useEffect(() => {
-    if(!window.ethereum) return
+    if(!window.ethereum){
+      setMetamaskConnection(false);
+      return
+    }
     //connect to metamask
     setMetamaskConnection(true)
 
@@ -47,18 +48,6 @@ export const App:React.FC<appProps> = () => {
       setCurrentAccount(accountInStorage)
     }
     if(!currentAccount || !ethers.utils.isAddress(currentAccount) || !accountInStorage) return
-
-    //client side code
-    //provider
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-
-    provider.getBalance(currentAccount).then((result)=>{
-      setBalance(ethers.utils.formatEther(result))
-    })
-    provider.getNetwork().then((result)=>{
-      setChainId(result.chainId)
-      setChainName(result.name)
-    })
 
   },[currentAccount])
 
@@ -86,10 +75,7 @@ export const App:React.FC<appProps> = () => {
   const onClickDisconnect = () => {
     console.log("onClickDisConnect")
     window.sessionStorage.removeItem("currentAccount")
-    setBalance(undefined)
     setCurrentAccount(undefined)
-    setChainId(undefined)
-    setChainName(undefined)
   }
 
   return(
@@ -104,11 +90,12 @@ export const App:React.FC<appProps> = () => {
           currentAccount={currentAccount}
           />} />
           <Route path="/heroes" element={<Heroes/>} />
-          <Route path="/arena" element={<Arena/>} />
+          <Route path="/arena/:heroId/:enemyId" element={<Arena/>} />
           <Route path="/my/heroes" element={<MyHeroes/>} />
-          <Route path="/hero/:id" element={<HeroDetails/>} />
-          <Route path="/fight/result" element={<FightResult/>} />
-          <Route path="/new/hero" element={<NewHero/>} />
+          <Route path="/my/cards" element={<MySummonCards/>} />
+          <Route path="/hero/:heroId" element={<HeroDetails/>} />
+          <Route path="/result/:reward" element={<FightResult/>} />
+          <Route path="/new/hero/:heroId" element={<NewHero/>} />
         </Routes>
       </Router>
     </ChakraProvider>

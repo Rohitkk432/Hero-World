@@ -38,6 +38,11 @@ contract HeroFight is HeroHelper {
         external
         onlyOwnerOfHero(_heroId)
     {
+        require(
+            _isReady(heroes[_heroId]) &&
+                _heroId != _targetId &&
+                heroToOwner[_targetId] != msg.sender
+        );
         Hero storage myHero = heroes[_heroId];
         Hero storage enemyHero = heroes[_targetId];
         uint256 rand = randMod(100);

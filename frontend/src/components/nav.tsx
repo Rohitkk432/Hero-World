@@ -21,7 +21,7 @@ const Nav: React.FC<navProps> = () => {
                 <Link to="/heroes">
                     <Box mx={3} >All Heroes</Box>
                 </Link>
-                <Link to="/arena">
+                <Link to="/arena/null/null">
                     <Box mx={3} >Arena</Box>
                 </Link>
                 <Link to="/my/heroes">

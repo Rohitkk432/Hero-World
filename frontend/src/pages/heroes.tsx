@@ -21,7 +21,7 @@ const Heroes: React.FC<heroesProps> = () => {
         <>
             <Box w="80%" display="flex" flexDirection="row" alignItems="center" justifyContent="flex-start" flexWrap="wrap" mx="auto" mt={10} >
                 {heroes.map((hero,index)=>{
-                    return (<HeroCard key={index} id={index} hero={hero} />)
+                    return (<HeroCard key={index} hero={hero} />)
                 })}
             </Box>
         </>

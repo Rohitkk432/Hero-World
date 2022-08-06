@@ -1,10 +1,12 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import {Text,Box,Button,useColorModeValue} from '@chakra-ui/react'
 import {ExternalLinkIcon} from '@chakra-ui/icons'
 
 import HeroCard from '../components/heroCard'
+import FightCard from '../components/fightCard'
 
 import {createFirstHero,getOwnerHeroCount} from '../contracts/functions'
 
@@ -19,7 +21,18 @@ const Landing: React.FC<landingProps> = ({onClickConnect,onClickDisconnect,curre
 
     const fontgradients = useColorModeValue("linear(to right, #ff00cc, #333399)","linear(to right, #9cecfb, #65c7f7, #0052d4)")
 
+    let navigate = useNavigate();
+
     const [heroCount, setHeroCount] = useState(0)
+
+    const creatingFirstHero = async () => {
+        await createFirstHero().then(res=>{
+            const id = Number(res.heroId)
+            navigate(`new/hero/${id}`)
+        }).catch(err=>{
+            console.log(err)
+        })
+    }
 
     useEffect(() => {
         if(currentAccount!==undefined){
@@ -49,8 +62,8 @@ const Landing: React.FC<landingProps> = ({onClickConnect,onClickDisconnect,curre
                                 <Button size="lg" onClick={onClickDisconnect} >Disconnect Wallet</Button>:
                                 <Button size="lg" onClick={onClickConnect} >Connect Wallet</Button>
                             }
-                            {heroCount === 0 ? 
-                                <Button mt={4} size="lg" onClick={createFirstHero} >Make First Hero</Button>
+                            {heroCount === 0 && currentAccount ? 
+                                <Button mt={4} size="lg" onClick={creatingFirstHero} >Make First Hero</Button>
                                 : null
                             }
                         </Box>
@@ -59,7 +72,7 @@ const Landing: React.FC<landingProps> = ({onClickConnect,onClickDisconnect,curre
                                 <HeroCard />
                             </Box>
                             <Box mr={10}>
-                                <HeroCard />
+                                <FightCard />
                             </Box>
                         </Box>
                     </Box>
