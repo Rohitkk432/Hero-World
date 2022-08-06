@@ -13,7 +13,7 @@ const NewHero: React.FC<newHeroProps> = () => {
                 <Text fontSize="6xl" fontWeight="bold">Congratulations</Text>
                 <Text fontSize="2xl" fontWeight="bold">on getting new Hero on the Team</Text>
                 <Box>
-                    <HeroCard/>
+                    {/* <HeroCard/> */}
                 </Box>
             </Box>
         </>

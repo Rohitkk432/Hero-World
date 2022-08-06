@@ -51,6 +51,25 @@ contract("HeroWorld", (accounts) => {
         const hero2Id = result.logs[0].args.heroId.toNumber();
         await time.increase(time.duration.days(1));
         result = await contractInstance.fight(hero1Id,hero2Id,{from:alice});
+        console.log(result.logs)
         assert.equal(result.receipt.status,true);
+    })
+    xit("should be able to fight, and use reward summon card",async()=>{
+        let result;
+        let reward;
+        result = await contractInstance.generateRandomHero({from: alice});
+        const hero1Id = result.logs[0].args.heroId.toNumber();
+        result = await contractInstance.generateRandomHero({from: bob});
+        const hero2Id = result.logs[0].args.heroId.toNumber();
+        await time.increase(time.duration.days(1));
+        result = await contractInstance.fight(hero1Id,hero2Id,{from:alice});
+        await time.increase(time.duration.days(2));
+        if(result.logs[0].args.heroId.toNumber()===hero1Id){
+            reward = result.logs[1].args.cardId.toNumber();
+            result = await contractInstance.useSummonCard(reward,{from:alice});
+            assert.equal(result.receipt.status,true);
+        }else if(result.logs[0].args.heroId.toNumber()===hero2Id){
+            assert.equal(result.receipt.status,true);
+        }
     })
 })

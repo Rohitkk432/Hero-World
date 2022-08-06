@@ -16,10 +16,7 @@ const MyHeroes: React.FC<myHeroesProps> = () => {
                     <Button size="md" ml={10} >Show my Summon Cards</Button>
                 </Text>
                 <Box w="80%" display="flex" flexDirection="row" alignItems="center" justifyContent="flex-start" flexWrap="wrap" mx="auto">
-                    <HeroCard />
-                    <HeroCard />
-                    <HeroCard />
-                    <HeroCard />
+                    {/* <HeroCard /> */}
                 </Box>
             </Box>
         </>

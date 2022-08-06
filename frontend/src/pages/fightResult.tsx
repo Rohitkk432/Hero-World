@@ -13,7 +13,7 @@ const FightResult: React.FC<fightResultProps> = () => {
                 <Text fontSize="6xl" fontWeight="bold">Result : WON</Text>
                 <Text fontSize="2xl" fontWeight="bold">Reward</Text>
                 <Box>
-                    <HeroCard/>
+                    {/* <HeroCard/> */}
                 </Box>
             </Box>
         </>

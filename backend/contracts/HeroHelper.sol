@@ -38,16 +38,27 @@ contract HeroHelper is HeroFactory {
     }
 
     ///@notice gets all heroes by a owner.
+    function getAllHeroes() external view returns (Hero[] memory) {
+        Hero[] memory result = new Hero[](heroes.length);
+        uint256 counter = 0;
+        for (uint256 i = 0; i < heroes.length; i++) {
+            result[counter] = heroes[i];
+            counter++;
+        }
+        return result;
+    }
+
+    ///@notice gets all heroes by a owner.
     function getHeroesByOwner(address _owner)
         external
         view
-        returns (uint256[] memory)
+        returns (Hero[] memory)
     {
-        uint256[] memory result = new uint256[](ownerHeroCount[_owner]);
+        Hero[] memory result = new Hero[](ownerHeroCount[_owner]);
         uint256 counter = 0;
         for (uint256 i = 0; i < heroes.length; i++) {
             if (heroToOwner[i] == _owner) {
-                result[counter] = i;
+                result[counter] = heroes[i];
                 counter++;
             }
         }
@@ -58,13 +69,15 @@ contract HeroHelper is HeroFactory {
     function getCardsByOwner(address _owner)
         external
         view
-        returns (uint256[] memory)
+        returns (SummonCard[] memory)
     {
-        uint256[] memory result = new uint256[](ownerSummonCardCount[_owner]);
+        SummonCard[] memory result = new SummonCard[](
+            ownerSummonCardCount[_owner]
+        );
         uint256 counter = 0;
         for (uint256 i = 0; i < summonCards.length; i++) {
             if (summonCardToOwner[i] == _owner) {
-                result[counter] = i;
+                result[counter] = summonCards[i];
                 counter++;
             }
         }

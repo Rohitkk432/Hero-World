@@ -8,7 +8,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 /// @notice You can use this contract for Hero and Summon Card generation.
 contract HeroFactory is Ownable {
     /// @notice events for creation of Heroes, SummonCards.
-    event HeroCreated(uint256 heroId, uint256 dna, uint8 species, uint8 rarity);
+    event HeroCreated(
+        uint256 heroId,
+        uint256 dna,
+        uint8 species,
+        uint8 rarity,
+        uint32 level
+    );
 
     event SummonCardCreated(uint256 cardId, uint8 species, uint8 rarity);
 
@@ -88,7 +94,7 @@ contract HeroFactory is Ownable {
         uint256 id = heroes.length - 1;
         heroToOwner[id] = msg.sender;
         ownerHeroCount[msg.sender]++;
-        emit HeroCreated(id, _dna, _species, _rarity);
+        emit HeroCreated(id, _dna, _species, _rarity, 1);
     }
 
     ///@notice creates summon card with given species, rarity.
@@ -123,6 +129,7 @@ contract HeroFactory is Ownable {
     function _generateRandomSummonCard() internal {
         uint256 randDna = _generateRandomNumber();
         uint8 randSpecies = uint8(randDna % 100);
+        randDna /= 100;
         uint8 randRarity = uint8(randDna % 100);
         _createSummonCard(randSpecies, randRarity);
     }

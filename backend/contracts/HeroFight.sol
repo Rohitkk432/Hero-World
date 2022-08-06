@@ -10,6 +10,8 @@ contract HeroFight is HeroHelper {
     uint256 randNum = 0;
     uint256 attackVictoryProbability = 60;
 
+    event FightResult(uint256 heroId, address owner);
+
     ///@notice generates psudo-random number.
     function randMod(uint256 _modulus) internal returns (uint256) {
         randNum++;
@@ -43,12 +45,14 @@ contract HeroFight is HeroHelper {
             myHero.winCount++;
             myHero.level++;
             enemyHero.lossCount++;
-            _generateRandomSummonCard();
             _triggerCooldown(myHero);
+            emit FightResult(_heroId, heroToOwner[_heroId]);
+            _generateRandomSummonCard();
         } else {
             myHero.lossCount++;
             enemyHero.winCount++;
             _triggerCooldown(myHero);
+            emit FightResult(_targetId, heroToOwner[_targetId]);
         }
     }
 }
