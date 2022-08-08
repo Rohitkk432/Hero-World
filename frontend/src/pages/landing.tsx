@@ -59,6 +59,9 @@ const Landing: React.FC<landingProps> = ({onClickConnect,onClickDisconnect,curre
                             <Text fontSize="xl" fontWeight="hairline" mb={10}>
                                 Use Summoning Cards to Summon more heroes.
                             </Text>
+                            <Text fontSize="lg" mb={2}>
+                                Connect to <strong>Rinkeby Test Network.</strong>
+                            </Text>
                             {currentAccount ?
                                 (
                                 <Box>
