@@ -2,14 +2,11 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 import "./HeroFight.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 /// @title Hero Transfering
 /// @author Rohit Kodam
 /// @notice You can use this contract for Transfering heroes.
-contract HeroOwnership is HeroFight{
-    using SafeMath for uint256;
-
+contract HeroOwnership is HeroFight {
     /// @notice approved address for transfer of heroes.
     mapping(uint256 => address) heroAppovals;
 
@@ -33,8 +30,9 @@ contract HeroOwnership is HeroFight{
         address _to,
         uint256 _tokenId
     ) private {
-        ownerHeroCount[_to] = ownerHeroCount[_to].add(1);
-        ownerHeroCount[msg.sender] = ownerHeroCount[msg.sender].sub(1);
+        require(_from != _to);
+        ownerHeroCount[_to]++;
+        ownerHeroCount[_from]--;
         heroToOwner[_tokenId] = _to;
         emit TransferSuccess(_from, _to, _tokenId);
     }
@@ -44,6 +42,7 @@ contract HeroOwnership is HeroFight{
         public
         onlyOwnerOfHero(_tokenId)
     {
+        require(msg.sender != _to);
         _transfer(msg.sender, _to, _tokenId);
     }
 
@@ -52,6 +51,7 @@ contract HeroOwnership is HeroFight{
         public
         onlyOwnerOfHero(_tokenId)
     {
+        require(msg.sender != _to);
         heroAppovals[_tokenId] = _to;
         emit ApprovalSuccess(msg.sender, _to, _tokenId);
     }
@@ -60,6 +60,30 @@ contract HeroOwnership is HeroFight{
     function takeOwnership(uint256 _tokenId) public {
         require(heroAppovals[_tokenId] == msg.sender);
         address owner = ownerOf(_tokenId);
+        require(heroAppovals[_tokenId] != owner);
         _transfer(owner, msg.sender, _tokenId);
+    }
+
+    ///@notice gets all heroes approved for you to take ownership.
+    function getHeroesApprovedForYou(address _you)
+        external
+        view
+        returns (Hero[] memory)
+    {
+        uint256 arrayCount = 0;
+        for (uint256 i = 0; i < heroes.length; i++) {
+            if (heroAppovals[i] == _you && heroToOwner[i] != _you) {
+                arrayCount++;
+            }
+        }
+        Hero[] memory result = new Hero[](arrayCount);
+        uint256 counter = 0;
+        for (uint256 i = 0; i < heroes.length; i++) {
+            if (heroAppovals[i] == _you && heroToOwner[i] != _you) {
+                result[counter] = heroes[i];
+                counter++;
+            }
+        }
+        return result;
     }
 }

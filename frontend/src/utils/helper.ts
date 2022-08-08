@@ -24,7 +24,7 @@ export const heroParser = (res:any,heroData:any) => {
             const minsTime = Math.floor(msTime/60000);
             cooldownTime = `${minsTime} mins`;
         }else{
-            cooldownTime = `1 mins`;
+            cooldownTime = `<1 mins`;
         }
     }else{
         cooldownTime = `Ready`;
@@ -62,7 +62,7 @@ export const cardParser = (res:any,heroData:any) => {
             const minsTime = Math.floor(msTime/60000);
             cooldownTime = `${minsTime} mins`;
         }else{
-            cooldownTime = `1 mins`;
+            cooldownTime = `< 1 mins`;
         }
     }else{
         cooldownTime = `Ready`;

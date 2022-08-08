@@ -3,9 +3,9 @@ import {useEffect,useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button,Box,Text , useColorModeValue} from '@chakra-ui/react'
-import {ArrowRightIcon} from '@chakra-ui/icons'
+import {ArrowRightIcon, ArrowUpIcon} from '@chakra-ui/icons'
 
-import {getHeroInfo,getHeroOwner} from '../contracts/functions'
+import {getHeroInfo,getHeroOwner,levelUpHero} from '../contracts/functions'
 import heroData from '../utils/heroData.json'
 
 import {heroParser} from '../utils/helper'
@@ -19,8 +19,12 @@ const HeroDetails: React.FC<heroDetailsProps> = () => {
 
     const [heroInfo, setHeroInfo] = useState<any>({})
     const [heroOwner, setHeroOwner] = useState("")
+    const [heroId, setHeroId] = useState(parseInt(window.location.pathname.split('/')[2]))
+
+    const [refresh, setRefresh] = useState(false)
     useEffect(()=>{
         const id =  parseInt(window.location.pathname.split('/')[2])
+        setHeroId(id)
         getHeroInfo(id).then(res=>{
             setHeroInfo(heroParser(res,heroData));
         }).catch(err=>{
@@ -31,7 +35,7 @@ const HeroDetails: React.FC<heroDetailsProps> = () => {
         }).catch(err=>{
             console.log(err)
         })
-    },[])
+    },[refresh])
 
     const textColor = useColorModeValue("black","white");
 
@@ -71,6 +75,20 @@ const HeroDetails: React.FC<heroDetailsProps> = () => {
                         <Text mb={3} fontSize="2xl">{(heroOwner.toLowerCase()===sessionStorage.getItem("currentAccount"))?"You":heroOwner.toLowerCase()}</Text>
                     </Box>
                 </Box>
+                {
+                    (heroOwner.toLowerCase()===sessionStorage.getItem("currentAccount"))?
+                    (   
+                        <Button size="lg" mt={5} color={textColor} fontWeight="bold" fontSize="xl"
+                        onClick={()=>{
+                            levelUpHero(heroId).then(res=>{
+                                setRefresh(!refresh)
+                            }).catch(err=>{
+                                console.log(err)
+                            })
+                        }}
+                        >Level Up &nbsp; <ArrowUpIcon/></Button>
+                    ):null
+                }
                 {(heroOwner.toLowerCase()===sessionStorage.getItem("currentAccount") && heroInfo.readyTime==="Ready")?
                     (   
                         <Button size="lg" mt={5} color={textColor} fontWeight="bold" fontSize="xl" onClick={()=>navigate(`/arena/${heroInfo.id}/null`)}  >Fight in Arena &nbsp; <ArrowRightIcon/></Button>

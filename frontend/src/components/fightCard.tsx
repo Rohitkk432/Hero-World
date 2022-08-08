@@ -25,15 +25,16 @@ interface fightCardProps {
     enemy?: boolean
     choosen?: boolean
     rerender?: boolean
+    transfer?: boolean
     setRerender?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const FightCard: React.FC<fightCardProps> = ({hero,mine,enemy,choosen,rerender,setRerender}) => {
+const FightCard: React.FC<fightCardProps> = ({hero,mine,enemy,choosen,rerender,setRerender,transfer}) => {
     const navigate = useNavigate();
 
-    let heroAdj="Tough", heroName="Aleksander", heroSpecies="Dark-Elf", heroRarity="Emperor-like",heroReadyTime="" ;
+    let heroAdj="Valiant", heroName="Leandros", heroSpecies="Necromancer", heroRarity="God-like",heroReadyTime="" ;
     let id:number|undefined;
-    let heroLevel = 52 , heroWins = 5, heroLosses = 12;
+    let heroLevel = 25 , heroWins = 7, heroLosses = 21;
 
     if( hero ){
         const result = heroParser(hero,heroData);
@@ -49,11 +50,17 @@ const FightCard: React.FC<fightCardProps> = ({hero,mine,enemy,choosen,rerender,s
     }
 
     const brokenLink = window.location.pathname.split('/');
-    if(mine!==undefined && mine){
-        brokenLink[2]=id!==undefined?String(id):"null";
-    }
-    if(enemy!==undefined && enemy){
-        brokenLink[3]=id!==undefined?String(id):"null";
+    if(!transfer || transfer===undefined){
+        if(mine!==undefined && mine){
+            brokenLink[2]=id!==undefined?String(id):"null";
+        }
+        if(enemy!==undefined && enemy){
+            brokenLink[3]=id!==undefined?String(id):"null";
+        }
+    }else{
+        if(enemy!==undefined && enemy){
+            brokenLink[2]=id!==undefined?String(id):"null";
+        }
     }
     let link =brokenLink.join('/');
 
@@ -66,8 +73,8 @@ const FightCard: React.FC<fightCardProps> = ({hero,mine,enemy,choosen,rerender,s
 
     return (
         <>
-            <Box w={300} h={40} m={4} px={8} py={5} color="white" bg="gray.700" rounded='lg' boxShadow="2xl" display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start" position="relative" >
-                <Text fontSize="2xl" lineHeight={1.2} mb={2} fontWeight="hairline">
+            <Box w={300} h={40} m={4} px={8} py={2} color="white" bg="gray.700" rounded='lg' boxShadow="2xl" display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start" position="relative" >
+                <Text fontSize="2xl" lineHeight={1.2} mb={2} fontWeight="hairline" pr={7}>
                     {heroAdj} {heroName}
                 </Text>
                 <Text>

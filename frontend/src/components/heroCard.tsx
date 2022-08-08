@@ -43,7 +43,7 @@ const HeroCard: React.FC<heroCardProps> = ({hero}) => {
     return (
         <>
             <Box w={300} h={40} m={4} px={8} py={5} color="white" bg="gray.700" rounded='lg' boxShadow="2xl" display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start" position="relative" >
-                <Text h={20} fontSize="2xl" lineHeight={1.2} fontWeight="hairline">
+                <Text h={20} fontSize="2xl" lineHeight={1.2} fontWeight="hairline" pr={7}>
                     {heroAdj} {heroName}
                 </Text>
                 <Text>

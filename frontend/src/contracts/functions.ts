@@ -9,7 +9,7 @@ let signer: ethers.providers.JsonRpcSigner;
 let heroWorldContract : ethers.Contract;
 
 const ABI = contract.abi
-const contractAddress = "0xbADb5D4F48c93B073e5EF2e12d125920eD0dA01f"
+const contractAddress = "0xABCf3D75e2f9343eC59F330aF41dE477Af3289C2"
 
 if(window.ethereum){
     //provider
@@ -80,4 +80,46 @@ export const heroFight = async (myheroId:number,enemyId:number) => {
     const result = await heroWorldContract.functions.fight(myheroId,enemyId);
     const receipt = await result.wait(); 
     return receipt.events;
+}
+
+//transfer hero
+export const transferHero = async (to:string,myHeroId:number) => {
+    const result = await heroWorldContract.functions.transfer(to,myHeroId);
+    const receipt = await result.wait();
+    return receipt.events;
+}
+
+//approve hero transfer
+export const approveHeroTransfer = async (to:string,myHeroId:number) => {
+    const result = await heroWorldContract.functions.approve(to,myHeroId);
+    const receipt = await result.wait();
+    return receipt.events;
+}
+
+//take ownership of hero
+export const takeOwnershipOfHero = async (myHeroId:number) => {
+    const result = await heroWorldContract.functions.takeOwnership(myHeroId);
+    const receipt = await result.wait();
+    return receipt.events;
+}
+
+//get heroes approved for you
+export const getHeroesApprovedToYou = async (address:string) => {
+    const heroes = await heroWorldContract.functions.getHeroesApprovedForYou(address);
+    return heroes[0]
+}
+
+//paid services
+//level up your hero
+export const levelUpHero = async(myHeroId:number) => {
+    const result = await heroWorldContract.functions.levelUp(myHeroId,{value: ethers.utils.parseEther("0.001")});
+    const receipt = await result.wait();
+    return receipt;
+}
+
+//buy summoning card
+export const buySummoningCard = async() => {
+    const result = await heroWorldContract.functions.purchaseCard({value: ethers.utils.parseEther("0.002")});
+    const receipt = await result.wait();
+    return receipt.events[0].args;
 }

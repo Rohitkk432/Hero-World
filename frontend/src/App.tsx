@@ -23,6 +23,8 @@ import FightResult from "./pages/fightResult";
 import MyHeroes from "./pages/myHeroes";
 import NewHero from "./pages/newHero";
 import MySummonCards from './pages/mySummonCards';
+import Transfer from './pages/transfer';
+import TakeOwnership from './pages/takeOwnership';
 
 interface appProps {
 
@@ -34,6 +36,7 @@ export const App:React.FC<appProps> = () => {
 
   const [metamaskConnection,setMetamaskConnection] = useState(false)
   const [currentAccount, setCurrentAccount] = useState<string | undefined>()
+  const [balance, setBalance] = useState<string | undefined>()
 
   useEffect(() => {
     if(!window.ethereum){
@@ -48,6 +51,11 @@ export const App:React.FC<appProps> = () => {
       setCurrentAccount(accountInStorage)
     }
     if(!currentAccount || !ethers.utils.isAddress(currentAccount) || !accountInStorage) return
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    provider.getBalance(currentAccount).then((result)=>{
+      setBalance(ethers.utils.formatEther(result)+" ETH")
+    })
 
   },[currentAccount])
 
@@ -70,12 +78,14 @@ export const App:React.FC<appProps> = () => {
       }
     })
     .catch((e)=>console.log(e))
+    
   }
 
   const onClickDisconnect = () => {
     console.log("onClickDisConnect")
     window.sessionStorage.removeItem("currentAccount")
     setCurrentAccount(undefined)
+    setBalance(undefined)
   }
 
   return(
@@ -88,9 +98,12 @@ export const App:React.FC<appProps> = () => {
           onClickConnect={onClickConnect} 
           onClickDisconnect={onClickDisconnect}
           currentAccount={currentAccount}
+          balance={balance}
           />} />
           <Route path="/heroes" element={<Heroes/>} />
           <Route path="/arena/:heroId/:enemyId" element={<Arena/>} />
+          <Route path="/transfer/:tokenId" element={<Transfer/>} />
+          <Route path="/takeownership/:tokenId" element={<TakeOwnership/>} />
           <Route path="/my/heroes" element={<MyHeroes/>} />
           <Route path="/my/cards" element={<MySummonCards/>} />
           <Route path="/hero/:heroId" element={<HeroDetails/>} />

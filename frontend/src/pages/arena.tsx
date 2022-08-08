@@ -67,7 +67,11 @@ const Arena: React.FC<arenaProps> = () => {
                     }
                     </Text>
                     <Box className='chooseYourCard' display="flex" flexDirection="column" justifyContent="flex-start" alignItems="center" h="75vh" overflowY="scroll" overflowX="hidden" boxShadow={useColorModeValue("none","outline")} rounded="lg" >
-                        {isNaN(heroId) ?
+                        {
+                            myHeroes.length===0 ? (
+                                <Text fontSize="2xl" my={"auto"} mx={7}  >You have no heroes</Text>
+                            )
+                            :isNaN(heroId) ?
                             (
                                 myHeroes.map((hero,index)=>{
                                     return (<FightCard key={index} mine={true} hero={hero} rerender={rerender} setRerender={setRerender} />)
@@ -105,7 +109,11 @@ const Arena: React.FC<arenaProps> = () => {
                         :null
                     }</Text>
                     <Box className='chooseYourCard' display="flex" flexDirection="column" justifyContent="flex-start" alignItems="center" h="75vh" overflowY="scroll" overflowX="hidden" boxShadow={useColorModeValue("none","outline")} rounded="lg" >
-                        {isNaN(enemyId) ?
+                        {
+                            othersHeroes.length===0 ? (
+                                <Text fontSize="2xl" my={"auto"} mx={7}  >No hero available</Text>
+                            )
+                            :isNaN(enemyId)?
                             (
                                 othersHeroes.map((hero,index)=>{
                                     return (<FightCard key={index} enemy={true} hero={hero} rerender={rerender} setRerender={setRerender} />)

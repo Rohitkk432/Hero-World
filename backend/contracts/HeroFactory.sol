@@ -22,8 +22,8 @@ contract HeroFactory is Ownable {
     // uint256 cooldownTime = 1 days;
     // uint256 summoningTime = 2 days;
 
-    uint256 cooldownTime = 1 minutes;
-    uint256 summoningTime = 2 minutes;
+    uint256 cooldownTime = 5 hours;
+    uint256 summoningTime = 10 hours;
 
     uint256 randNonce = 0;
 

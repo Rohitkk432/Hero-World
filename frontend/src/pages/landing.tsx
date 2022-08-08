@@ -15,9 +15,10 @@ interface landingProps {
     onClickDisconnect: () => void,
     currentAccount: string | undefined,
     metamaskConnection: boolean
+    balance: string | undefined
 }
 
-const Landing: React.FC<landingProps> = ({onClickConnect,onClickDisconnect,currentAccount, metamaskConnection}) => {
+const Landing: React.FC<landingProps> = ({onClickConnect,onClickDisconnect,currentAccount, metamaskConnection,balance}) => {
 
     const fontgradients = useColorModeValue("linear(to right, #ff00cc, #333399)","linear(to right, #9cecfb, #65c7f7, #0052d4)")
 
@@ -46,7 +47,7 @@ const Landing: React.FC<landingProps> = ({onClickConnect,onClickDisconnect,curre
         <>  
             {metamaskConnection ? 
                 (
-                    <Box w="100%" px={10} py={5} display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start" >
+                    <Box w="100%" px={10} py={5} display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start">
                         <Box display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start">
                             <Text fontSize="3xl" > <Text bgGradient={fontgradients} bgClip='text' fontSize="5xl" fontWeight="bold" display="inline" mr={2}>Hero World</Text> with no Villain</Text>
                             <Text fontSize="2xl" fontWeight="hairline" mb={10}>
@@ -59,7 +60,13 @@ const Landing: React.FC<landingProps> = ({onClickConnect,onClickDisconnect,curre
                                 Use Summoning Cards to Summon more heroes.
                             </Text>
                             {currentAccount ?
-                                <Button size="lg" onClick={onClickDisconnect} >Disconnect Wallet</Button>:
+                                (
+                                <Box>
+                                    <Text mb={1}>Connected Account : {currentAccount}</Text>
+                                    <Text mb={3}>balance : {balance}</Text>
+                                    <Button size="lg" onClick={onClickDisconnect} >Disconnect Wallet</Button>
+                                </Box>
+                                ):
                                 <Button size="lg" onClick={onClickConnect} >Connect Wallet</Button>
                             }
                             {heroCount === 0 && currentAccount ? 
