@@ -8,8 +8,8 @@ import "./HeroFactory.sol";
 /// @notice Purchases and get functions.
 contract HeroHelper is HeroFactory {
     ///@notice fees for specific tasks.
-    uint256 levelUpFee = 0.001 ether;
-    uint256 CardPurchaseFee = 0.002 ether;
+    uint256 public levelUpFee = 0.001 ether;
+    uint256 public CardPurchaseFee = 0.002 ether;
 
     ///@notice withdraws the balance of the contract.
     function withdraw() external onlyOwner {

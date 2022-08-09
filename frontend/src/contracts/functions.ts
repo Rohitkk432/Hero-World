@@ -9,7 +9,7 @@ let signer: ethers.providers.JsonRpcSigner;
 let heroWorldContract : ethers.Contract;
 
 const ABI = contract.abi
-const contractAddress = "0x73D0B08A531222Fa4d59c97217e2DC1475cc7871"
+const contractAddress = "0x5a7a53a5b33c05c0f4bcbaae2e14a3cd97edc0a4"
 
 if(window.ethereum){
     //provider
@@ -21,6 +21,38 @@ if(window.ethereum){
 }
 
 //functions
+//get contract owner
+export const getContractOwner = async () => {
+    const owner = await heroWorldContract.functions.owner();
+    return owner[0];
+}
+//get contract balance
+export const getContractBalance = async () => {
+    const balance = await provider.getBalance(contractAddress);
+    const ethBalance = ethers.utils.formatEther(balance)+" ETH"
+    return ethBalance;
+}
+//withdraw balance from contract
+export const withdrawBalance = async () => {
+    const result = await heroWorldContract.functions.withdraw();
+    const receipt = await result.wait(); 
+    return receipt;
+}
+//set level up fee
+export const changeLevelUpFee = async (fee:number) => {
+    const feeVal = ethers.utils.parseEther(fee.toString());
+    const result = await heroWorldContract.functions.setLevelUpFee(feeVal);
+    const receipt = await result.wait(); 
+    return receipt;
+}
+//set card purchase fee
+export const changeCardPurchaseFee = async (fee:number) => {
+    const feeVal = ethers.utils.parseEther(fee.toString());
+    const result = await heroWorldContract.functions.setCardPurchaseFee(feeVal);
+    const receipt = await result.wait(); 
+    return receipt;
+}
+
 //get all heroes
 export const getAllHeroes = async () => {
     const heroes = await heroWorldContract.functions.getAllHeroes();
@@ -112,14 +144,16 @@ export const getHeroesApprovedToYou = async (address:string) => {
 //paid services
 //level up your hero
 export const levelUpHero = async(myHeroId:number) => {
-    const result = await heroWorldContract.functions.levelUp(myHeroId,{value: ethers.utils.parseEther("0.001")});
+    const levelUpFeeVal = await heroWorldContract.functions.levelUpFee();
+    const result = await heroWorldContract.functions.levelUp(myHeroId,{value: levelUpFeeVal.toString()});
     const receipt = await result.wait();
     return receipt;
 }
 
 //buy summoning card
 export const buySummoningCard = async() => {
-    const result = await heroWorldContract.functions.purchaseCard({value: ethers.utils.parseEther("0.002")});
+    const CardPurchaseFeeVal = await heroWorldContract.functions.CardPurchaseFee();
+    const result = await heroWorldContract.functions.purchaseCard({value: CardPurchaseFeeVal.toString()});
     const receipt = await result.wait();
     return receipt.events[0].args;
 }

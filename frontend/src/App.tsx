@@ -25,6 +25,7 @@ import NewHero from "./pages/newHero";
 import MySummonCards from './pages/mySummonCards';
 import Transfer from './pages/transfer';
 import TakeOwnership from './pages/takeOwnership';
+import Admin from './pages/admin';
 
 interface appProps {
 
@@ -91,7 +92,7 @@ export const App:React.FC<appProps> = () => {
   return(
     <ChakraProvider theme={theme}>
       <Router>
-        <Nav></Nav>
+        <Nav currentAccount={currentAccount} />
         <Routes>
           <Route path="/" element={<Landing 
           metamaskConnection={metamaskConnection}
@@ -109,6 +110,7 @@ export const App:React.FC<appProps> = () => {
           <Route path="/hero/:heroId" element={<HeroDetails/>} />
           <Route path="/result/:reward" element={<FightResult/>} />
           <Route path="/new/hero/:heroId" element={<NewHero/>} />
+          <Route path="/admin" element={<Admin/>} />
         </Routes>
       </Router>
     </ChakraProvider>
