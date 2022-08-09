@@ -5,6 +5,7 @@ import {useNavigate} from 'react-router-dom'
 import {Box, Text, Button,useColorModeValue} from '@chakra-ui/react'
 import {CloseIcon} from '@chakra-ui/icons'
 import FightCard from '../components/fightCard'
+import Process from '../components/process'
 
 import "../styles.css"
 
@@ -16,6 +17,7 @@ interface arenaProps {
 
 const Arena: React.FC<arenaProps> = () => {
     const navigate = useNavigate();
+    const [processBox,setProcessBox] = useState("closed");
 
     const [myHeroes, setMyHeroes] = useState<any[]>([])
     const [allHeroes, setAllHeroes] = useState<any[]>([])
@@ -52,6 +54,7 @@ const Arena: React.FC<arenaProps> = () => {
     },[rerender])
     return (
         <>
+            <Process processBox={processBox} setProcessBox={setProcessBox} />
             <Box w="100%" px={5} display="flex" flexDirection="row" justifyContent="space-evenly" alignItems="center" >
                 <Box className='chooseYourCard' display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start" mx={3} >
                     <Text fontSize="2xl" my={3}>Choose Your Hero : &nbsp;
@@ -83,7 +86,9 @@ const Arena: React.FC<arenaProps> = () => {
                 </Box>
                 {fightLegal ? 
                     (<Button size="lg"bg={"green"} _hover={{bg: "green.800"}} onClick={()=>{
+                        setProcessBox("loading");
                         heroFight(heroId,enemyId).then(res=>{
+                            setProcessBox("success");
                             if(Number(res[0].args.heroId)===heroId){
                                 const cardId = res[1].args.cardId
                                 navigate(`/result/${cardId}`)
@@ -91,6 +96,7 @@ const Arena: React.FC<arenaProps> = () => {
                                 navigate(`/result/null`)
                             }
                         }).catch(err=>{
+                            setProcessBox("failed");
                             console.log(err)
                         })
                     }}>Fight</Button>):

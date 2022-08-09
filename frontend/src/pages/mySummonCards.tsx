@@ -3,6 +3,7 @@ import {useEffect,useState} from 'react'
 import {Link} from 'react-router-dom'
 
 import SummonCard from '../components/summonCard'
+import Process from '../components/process'
 
 import {Box,Text,Button} from '@chakra-ui/react'
 import {AddIcon} from '@chakra-ui/icons' 
@@ -15,6 +16,8 @@ interface mySummonCardsProps {
 }
 
 const MySummonCards: React.FC<mySummonCardsProps> = () => {
+    const [processBox,setProcessBox] = useState("closed");
+
     const [myCards, setMyCards] = useState<any[]>([])
     const [refresh, setRefresh] = useState(false)
     useEffect(()=>{
@@ -27,6 +30,7 @@ const MySummonCards: React.FC<mySummonCardsProps> = () => {
     },[refresh])
     return (
         <>  
+            <Process processBox={processBox} setProcessBox={setProcessBox} />
             <Box w="100%" display="flex" flexDirection="column" justifyContent="center" alignItems="center" >
                 <Text fontSize="3xl" fontWeight="bold" mt={5}>
                     My Summon Cards
@@ -35,9 +39,12 @@ const MySummonCards: React.FC<mySummonCardsProps> = () => {
                     </Link>
                     <Button size="md" ml={10}
                     onClick={()=>{
+                        setProcessBox("loading");
                         buySummoningCard().then(res=>{
+                            setProcessBox("success");
                             setRefresh(!refresh)
                         }).catch(err=>{
+                            setProcessBox("failed");
                             console.log(err)
                         })
                     }}

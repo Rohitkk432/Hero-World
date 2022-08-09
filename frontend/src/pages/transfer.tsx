@@ -5,6 +5,7 @@ import {useNavigate} from 'react-router-dom'
 import {Box, Text, Button,useColorModeValue,Input,Tooltip} from '@chakra-ui/react'
 import {CloseIcon,ArrowRightIcon,ArrowForwardIcon} from '@chakra-ui/icons'
 import FightCard from '../components/fightCard'
+import Process from '../components/process'
 
 import "../styles.css"
 
@@ -16,6 +17,7 @@ interface transferProps {
 
 const Transfer: React.FC<transferProps> = () => {
     const navigate = useNavigate();
+    const [processBox,setProcessBox] = useState("closed");
 
     const [myHeroes, setMyHeroes] = useState<any[]>([])
     const [allHeroes, setAllHeroes] = useState<any[]>([])
@@ -41,7 +43,8 @@ const Transfer: React.FC<transferProps> = () => {
         }
     },[rerender])
     return (
-        <>
+        <>  
+            <Process processBox={processBox} setProcessBox={setProcessBox} />
             <Box w="100%" px={5} display="flex" flexDirection="row" justifyContent="space-evenly" alignItems="center" >
                 <Box className='chooseYourCard' display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start" mx={3} >
                     <Text fontSize="2xl" my={3}>Choose Your Hero to Send : &nbsp;
@@ -82,9 +85,12 @@ const Transfer: React.FC<transferProps> = () => {
                         onClick={
                             ()=>{
                                 if(!isNaN(heroId) && receiverAddress!==""){
+                                    setProcessBox("loading");
                                     transferHero(receiverAddress,heroId).then(res=>{
+                                        setProcessBox("success");
                                         navigate(`/my/heroes`)
                                     }).catch(err=>{
+                                        setProcessBox("failed");
                                         console.log(err)
                                     })
                                 }
@@ -100,9 +106,12 @@ const Transfer: React.FC<transferProps> = () => {
                         onClick={
                             ()=>{
                                 if(!isNaN(heroId) && approvalAddress!==""){
+                                    setProcessBox("loading");
                                     approveHeroTransfer(approvalAddress,heroId).then(res=>{
+                                        setProcessBox("success");
                                         navigate(`/my/heroes`)
                                     }).catch(err=>{
+                                        setProcessBox("failed");
                                         console.log(err)
                                     })
                                 }

@@ -7,6 +7,7 @@ import {ExternalLinkIcon} from '@chakra-ui/icons'
 
 import HeroCard from '../components/heroCard'
 import FightCard from '../components/fightCard'
+import Process from '../components/process'
 
 import {createFirstHero,getOwnerHeroCount} from '../contracts/functions'
 
@@ -23,14 +24,18 @@ const Landing: React.FC<landingProps> = ({onClickConnect,onClickDisconnect,curre
     const fontgradients = useColorModeValue("linear(to right, #ff00cc, #333399)","linear(to right, #9cecfb, #65c7f7, #0052d4)")
 
     let navigate = useNavigate();
+    const [processBox,setProcessBox] = useState("closed");
 
     const [heroCount, setHeroCount] = useState(0)
 
     const creatingFirstHero = async () => {
+        setProcessBox("loading");
         await createFirstHero().then(res=>{
+            setProcessBox("success");
             const id = Number(res.heroId)
             navigate(`new/hero/${id}`)
         }).catch(err=>{
+            setProcessBox("failed");
             console.log(err)
         })
     }
@@ -45,9 +50,11 @@ const Landing: React.FC<landingProps> = ({onClickConnect,onClickDisconnect,curre
 
     return (
         <>  
+            <Process processBox={processBox} setProcessBox={setProcessBox} />
             {metamaskConnection ? 
                 (
-                    <Box w="100%" px={10} py={5} display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start">
+                    <Box w="100%" px={10} py={5} display="flex" flexDirection="row" 
+                    justifyContent="space-between" alignItems="flex-start">
                         <Box display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start">
                             <Text fontSize="3xl" > <Text bgGradient={fontgradients} bgClip='text' fontSize="5xl" fontWeight="bold" display="inline" mr={2}>Hero World</Text> with no Villain</Text>
                             <Text fontSize="2xl" fontWeight="hairline" mb={10}>

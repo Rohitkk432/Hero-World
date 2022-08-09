@@ -1,8 +1,11 @@
 import React from 'react'
+import {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Box, Text} from '@chakra-ui/react'
 
 import heroData from '../utils/heroData.json'
+
+import Process from '../components/process'
 
 import {cardParser} from '../utils/helper'
 
@@ -26,6 +29,7 @@ interface summonCardProps {
 
 const SummonCard: React.FC<summonCardProps> = ({summonCard}) => {
     const navigate = useNavigate()
+    const [processBox,setProcessBox] = useState("closed");
 
     let cardSpecies="Reincarnation", cardRarity="God-like",cardReadyTime="2 hrs 30 mins " ;
     let id:number|undefined;
@@ -39,16 +43,20 @@ const SummonCard: React.FC<summonCardProps> = ({summonCard}) => {
     }
 
     const usingSummonCard = async (cardId:number) => {
+        setProcessBox("loading");
         await usingSummoningCard(cardId).then(res=>{
+            setProcessBox("success");
             const id = Number(res.heroId)
             navigate(`/new/hero/${id}`)
         }).catch(err=>{
+            setProcessBox("failed");
             console.log(err)
         })
     }
 
     return (
         <>
+            <Process processBox={processBox} setProcessBox={setProcessBox} />
             <Box w={300} h={40} m={4} px={8} py={5} color="white" bg="gray.700" rounded='lg' boxShadow="2xl" display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start" position="relative" >
                 <Text fontSize="xl">
                     Species: {cardSpecies}

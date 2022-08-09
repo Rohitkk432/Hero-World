@@ -8,6 +8,8 @@ import {ArrowRightIcon, ArrowUpIcon} from '@chakra-ui/icons'
 import {getHeroInfo,getHeroOwner,levelUpHero} from '../contracts/functions'
 import heroData from '../utils/heroData.json'
 
+import Process from '../components/process'
+
 import {heroParser} from '../utils/helper'
 
 interface heroDetailsProps {
@@ -16,6 +18,7 @@ interface heroDetailsProps {
 
 const HeroDetails: React.FC<heroDetailsProps> = () => {
     const navigate = useNavigate()
+    const [processBox,setProcessBox] = useState("closed");
 
     const [heroInfo, setHeroInfo] = useState<any>({})
     const [heroOwner, setHeroOwner] = useState("")
@@ -41,6 +44,7 @@ const HeroDetails: React.FC<heroDetailsProps> = () => {
 
     return (
         <>  
+            <Process processBox={processBox} setProcessBox={setProcessBox} />
             <Text w="80%" mx="auto" mt={2} fontSize="3xl" fontWeight="semibold" > Hero Details:</Text>
             <Box w="80%" display="flex" flexDirection="column" alignItems="flex-start" justifyContent="flex-start" flexWrap="wrap" mx="auto" mt={3} rounded="xl"
             boxShadow="dark-lg" pl={10} pr={20} pb={10} mb={10} position="relative" color="white" bg="gray.700" >
@@ -80,9 +84,12 @@ const HeroDetails: React.FC<heroDetailsProps> = () => {
                     (   
                         <Button size="lg" mt={5} color={textColor} fontWeight="bold" fontSize="xl"
                         onClick={()=>{
+                            setProcessBox("loading");
                             levelUpHero(heroId).then(res=>{
+                                setProcessBox("success");
                                 setRefresh(!refresh)
                             }).catch(err=>{
+                                setProcessBox("failed");
                                 console.log(err)
                             })
                         }}

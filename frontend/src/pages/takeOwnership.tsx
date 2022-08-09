@@ -5,6 +5,7 @@ import {useNavigate} from 'react-router-dom'
 import {Box, Text, Button,useColorModeValue,Tooltip} from '@chakra-ui/react'
 import {CloseIcon,ArrowRightIcon,ArrowForwardIcon} from '@chakra-ui/icons'
 import FightCard from '../components/fightCard'
+import Process from '../components/process'
 
 import "../styles.css"
 
@@ -16,6 +17,7 @@ interface takeOwnershipProps {
 
 const TakeOwnership: React.FC<takeOwnershipProps> = () => {
     const navigate = useNavigate();
+    const [processBox,setProcessBox] = useState("closed");
 
     const [approvedHeroes, setApprovedHeroes] = useState<any[]>([])
     const [allHeroes, setAllHeroes] = useState<any[]>([])
@@ -38,7 +40,8 @@ const TakeOwnership: React.FC<takeOwnershipProps> = () => {
         }
     },[rerender])
     return (
-        <>
+        <>  
+            <Process processBox={processBox} setProcessBox={setProcessBox} />
             <Box w="100%" px={5} display="flex" flexDirection="row" justifyContent="space-evenly" alignItems="center" >
                 <Box className='chooseYourCard' display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start" mx={3} >
                     <Text fontSize="2xl" my={3}>Choose Hero to Take Ownership : &nbsp;
@@ -78,9 +81,12 @@ const TakeOwnership: React.FC<takeOwnershipProps> = () => {
                         onClick={
                             ()=>{
                                 if(!isNaN(heroId)){
+                                    setProcessBox("loading");
                                     takeOwnershipOfHero(heroId).then(res=>{
+                                        setProcessBox("success");
                                         navigate(`/my/heroes`)
                                     }).catch(err=>{
+                                        setProcessBox("failed");
                                         console.log(err)
                                     })
                                 }
