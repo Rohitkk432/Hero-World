@@ -21,7 +21,7 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 //
 // const fs = require('fs');
-const mnemonic = "YOUR_MNEMONIC";
+const mnemonic = "MNEMONIC";
 
 module.exports = {
   /**
@@ -48,11 +48,13 @@ module.exports = {
     },
     rinkeby: {
       provider: function() { 
-        return new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/YOUR_INFURA_ACCESS_TOKEN`);
+        return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/API_KEY")
       },
       network_id: 4,
-      gas: 4500000,
-      gasPrice: 10000000000,
+      confirmations: 2,
+      timeoutBlocks: 2000,
+      skipDryRun: true,
+      networkCheckTimeout: 20000,
     },
     //
     // An additional network, but with some advanced options…

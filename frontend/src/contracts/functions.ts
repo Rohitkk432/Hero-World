@@ -9,7 +9,7 @@ let signer: ethers.providers.JsonRpcSigner;
 let heroWorldContract : ethers.Contract;
 
 const ABI = contract.abi
-const contractAddress = "0x5a7a53a5b33c05c0f4bcbaae2e14a3cd97edc0a4"
+const contractAddress = "0x0165D17c7FFB6C47265F0195170Ef761161BceB8"
 
 if(window.ethereum){
     //provider
