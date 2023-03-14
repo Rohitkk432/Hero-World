@@ -29,7 +29,7 @@ $ cd backend
 $ npm install
 
 ## testing with truffle test scripts (can find in test folder).
-@notice- comment out development & rinkeby inside network in "truffle-config.js" 
+@notice- comment out development & Sepolia inside network in "truffle-config.js" 
 @notice- remove the x which ignores the tests. (xit => it) (xcontext => context)
 $ truffle test
 
@@ -42,7 +42,7 @@ $ truffle migrate
 
 ## deploying with your own account
 @notice- add your mnemonic and infura access token
-$ truffle migrate --network rinkeby
+$ truffle migrate --network Sepolia
 ```
 
 Frontend is in <code>React - Typescript - ChakraUi</code>
@@ -60,7 +60,7 @@ $ npm run start
 
 - As a learning opportunity most of the code is taken from cryptozombies and built on it
 - When one opens the website they must need metamask install
-- Then one can connect to rinkeby network and click on <code>Connect</code> on landing page.
+- Then one can connect to Sepolia network and click on <code>Connect</code> on landing page.
 - And create the first hero.
 - The hero model consists of dna - which break downs to an ADJECTIVE and GREEK-NAME on frontend, species and rarity which maps to its value on frontend.
 - In Arena can fight with other heroes on the game network but hero also has a cooldown period after each fight.
