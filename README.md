@@ -2,6 +2,7 @@
 
 - Developing a Dapp using <code>Truffle-Solidity</code> , with <code>React-Typescript-ChakraUI</code> frontend.
 - Inspired from <code>Cryptozombies , Cryptokitties</code>.
+cleaned 
 
 Deployed at - https://hero-world-web3.netlify.app/
 
